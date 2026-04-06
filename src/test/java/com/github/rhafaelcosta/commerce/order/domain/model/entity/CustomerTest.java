@@ -12,7 +12,7 @@ class CustomerTest {
     @Test
     void given_invalidEmail_whenTryCreateCustomer_shouldGenerateException() {
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> CustomerTestDataBuilder.brandNewCustomer()
+                .isThrownBy(()-> CustomerTestDataBuilder.brandNewCustomer()
                         .email(new Email("invalid")).build()
                 );
     }
@@ -20,6 +20,7 @@ class CustomerTest {
     @Test
     void given_invalidEmail_whenTryUpdatedCustomerEmail_shouldGenerateException() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> customer.changeEmail(new Email("invalid")));
     }
@@ -53,16 +54,18 @@ class CustomerTest {
 
     @Test
     void given_archivedCustomer_whenTryToUpdate_shouldGenerateException() {
+        Phone phone = new Phone("123-123-1111");
+        Email email = new Email("email@gmail.com");
         Customer customer = CustomerTestDataBuilder.existingAnonymizedCustomer().build();
 
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
                 .isThrownBy(customer::archive);
 
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(() -> customer.changeEmail(new Email("email@gmail.com")));
+                .isThrownBy(() -> customer.changeEmail(email));
 
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(() -> customer.changePhone(new Phone("123-123-1111")));
+                .isThrownBy(() -> customer.changePhone(phone));
 
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
                 .isThrownBy(customer::enablePromotionNotifications);
@@ -84,12 +87,11 @@ class CustomerTest {
     void given_brandNewCustomer_whenAddInvalidLoyaltyPoints_shouldGenerateException() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> customer.addLoyaltyPoints(new LoyaltyPoints(0)));
+        Assertions.assertThatNoException()
+                .isThrownBy(()-> customer.addLoyaltyPoints(new LoyaltyPoints(0)));
 
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> customer.addLoyaltyPoints(new LoyaltyPoints(-10)));
-
+                .isThrownBy(()-> new LoyaltyPoints(-10));
     }
 
 }

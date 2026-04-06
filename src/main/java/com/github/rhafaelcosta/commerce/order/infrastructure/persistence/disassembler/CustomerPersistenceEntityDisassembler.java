@@ -5,7 +5,9 @@ import com.github.rhafaelcosta.commerce.order.domain.model.valueobject.*;
 import com.github.rhafaelcosta.commerce.order.domain.model.valueobject.id.CustomerId;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.CustomerPersistenceEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CustomerPersistenceEntityDisassembler {
 
     public Customer toDomainEntity(CustomerPersistenceEntity entity) {
