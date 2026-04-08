@@ -14,3 +14,8 @@ spring:
         hibernate:
             ddl-auto: update
         show-sql: 'true'
+
+commerce-platform:
+    integrations:
+        shipping.provider: "RAPIDEX"
+        rapidex.url: "http://localhost:8780"
