@@ -1,11 +1,12 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity;
 
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.embeddable.AddressEmbeddable;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.commons.AddressEmbeddable;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntity;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
-import static com.github.rhafaelcosta.commerce.order.domain.model.entity.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+import static com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 public class CustomerPersistenceEntityTestDataBuilder {
 

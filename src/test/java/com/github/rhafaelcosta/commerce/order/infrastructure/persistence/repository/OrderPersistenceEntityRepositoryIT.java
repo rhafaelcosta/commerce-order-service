@@ -1,11 +1,13 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.persistence.repository;
 
-import com.github.rhafaelcosta.commerce.order.domain.model.entity.CustomerTestDataBuilder;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.config.SpringDataAuditingConfig;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.CustomerPersistenceEntity;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.SpringDataAuditingConfig;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntity;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntity;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

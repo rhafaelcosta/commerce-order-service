@@ -17,5 +17,5 @@ spring:
 
 commerce-platform:
     integrations:
-        shipping.provider: "RAPIDEX"
+        shipping.provider: "FAKE"
         rapidex.url: "http://localhost:8780"

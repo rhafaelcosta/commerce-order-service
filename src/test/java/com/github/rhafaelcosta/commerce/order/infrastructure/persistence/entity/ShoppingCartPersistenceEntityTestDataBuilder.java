@@ -1,6 +1,8 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity;
 
-import com.github.rhafaelcosta.commerce.order.domain.model.utility.IdGenerator;
+import com.github.rhafaelcosta.commerce.order.domain.model.IdGenerator;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.shoppingcart.ShoppingCartItemPersistenceEntity;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

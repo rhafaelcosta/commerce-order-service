@@ -1,8 +1,10 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity;
 
 
-import com.github.rhafaelcosta.commerce.order.domain.model.utility.IdGenerator;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.OrderPersistenceEntity.OrderPersistenceEntityBuilder;
+import com.github.rhafaelcosta.commerce.order.domain.model.IdGenerator;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntity;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntity.OrderPersistenceEntityBuilder;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderItemPersistenceEntity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

@@ -1,15 +1,17 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.persistence.provider;
 
-import com.github.rhafaelcosta.commerce.order.domain.model.entity.CustomerTestDataBuilder;
-import com.github.rhafaelcosta.commerce.order.domain.model.entity.Order;
-import com.github.rhafaelcosta.commerce.order.domain.model.entity.OrderStatus;
-import com.github.rhafaelcosta.commerce.order.domain.model.entity.OrderTestDataBuilder;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.config.SpringDataAuditingConfig;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.Order;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderStatus;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityAssembler;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityAssembler;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.SpringDataAuditingConfig;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityDisassembler;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomersPersistenceProvider;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityDisassembler;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityRepository;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrdersPersistenceProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

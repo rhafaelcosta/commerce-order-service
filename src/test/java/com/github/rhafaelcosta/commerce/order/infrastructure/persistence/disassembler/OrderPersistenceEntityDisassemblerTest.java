@@ -1,14 +1,15 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.persistence.disassembler;
 
-import com.github.rhafaelcosta.commerce.order.domain.model.entity.Order;
-import com.github.rhafaelcosta.commerce.order.domain.model.entity.OrderStatus;
-import com.github.rhafaelcosta.commerce.order.domain.model.entity.PaymentMethod;
-import com.github.rhafaelcosta.commerce.order.domain.model.valueobject.Money;
-import com.github.rhafaelcosta.commerce.order.domain.model.valueobject.Quantity;
-import com.github.rhafaelcosta.commerce.order.domain.model.valueobject.id.CustomerId;
-import com.github.rhafaelcosta.commerce.order.domain.model.valueobject.id.OrderId;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.github.rhafaelcosta.commerce.order.domain.model.commons.Money;
+import com.github.rhafaelcosta.commerce.order.domain.model.commons.Quantity;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerId;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.Order;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderId;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderStatus;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.PaymentMethod;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntity;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityDisassembler;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +32,8 @@ class OrderPersistenceEntityDisassemblerTest {
                 s -> assertThat(s.canceledAt()).isEqualTo(persistenceEntity.getCanceledAt()),
                 s -> assertThat(s.readyAt()).isEqualTo(persistenceEntity.getReadyAt()),
                 s -> assertThat(s.status()).isEqualTo(OrderStatus.valueOf(persistenceEntity.getStatus())),
-                s -> assertThat(s.paymentMethod()).isEqualTo(PaymentMethod.valueOf(persistenceEntity.getPaymentMethod()))
+                s -> assertThat(s.paymentMethod()).isEqualTo(PaymentMethod.valueOf(persistenceEntity.getPaymentMethod())),
+                s -> assertThat(s.items().size()).isEqualTo(persistenceEntity.getItems().size())
         );
     }
 
