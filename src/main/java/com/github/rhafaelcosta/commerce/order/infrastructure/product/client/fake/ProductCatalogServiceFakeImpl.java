@@ -5,9 +5,11 @@ import com.github.rhafaelcosta.commerce.order.domain.model.commons.Money;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.Product;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.ProductName;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.ProductId;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class ProductCatalogServiceFakeImpl implements ProductCatalogService {
 
     @Override
