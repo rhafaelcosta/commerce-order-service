@@ -1,14 +1,16 @@
 package com.github.rhafaelcosta.commerce.order.application.customer.management;
 
-import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerArchivedException;
-import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerEmailIsInUseException;
-import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerNotFoundException;
+import com.github.rhafaelcosta.commerce.order.application.customer.notification.CustomerNotificationApplicationService;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.*;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.ProductCatalogService;
+import com.github.rhafaelcosta.commerce.order.infrastructure.listener.customer.CustomerEventListener;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -18,11 +20,17 @@ import java.util.UUID;
 @SpringBootTest
 class CustomerManagementApplicationServiceIT {
 
-    @Autowired
-    private CustomerManagementApplicationService customerManagementApplicationService;
+    @MockitoSpyBean
+    private CustomerEventListener customerEventListener;
 
     @MockitoBean
     private ProductCatalogService productCatalogService;
+
+    @Autowired
+    private CustomerManagementApplicationService customerManagementApplicationService;
+
+    @MockitoSpyBean
+    private CustomerNotificationApplicationService customerNotificationApplicationService;
 
     @Test
     void shouldRegister() {
@@ -49,6 +57,10 @@ class CustomerManagementApplicationServiceIT {
                 );
 
         Assertions.assertThat(customerOutput.getRegisteredAt()).isNotNull();
+
+        Mockito.verify(customerEventListener).listen(Mockito.any(CustomerRegisteredEvent.class));
+        Mockito.verify(customerEventListener, Mockito.never()).listen(Mockito.any(CustomerArchivedEvent.class));
+        Mockito.verify(customerNotificationApplicationService).notifyNewRegistration(Mockito.any(CustomerNotificationApplicationService.NotifyNewRegistrationInput.class));
     }
 
     @Test
@@ -197,4 +209,5 @@ class CustomerManagementApplicationServiceIT {
         Assertions.assertThatExceptionOfType(CustomerEmailIsInUseException.class)
                 .isThrownBy(() -> customerManagementApplicationService.changeEmail(customerId, customerRhafael.getEmail()));
     }
+
 }

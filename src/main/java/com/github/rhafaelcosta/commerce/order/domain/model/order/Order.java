@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.domain.model.order;
 
+import com.github.rhafaelcosta.commerce.order.domain.model.AbstractEventSourceEntity;
 import com.github.rhafaelcosta.commerce.order.domain.model.AggregateRoot;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Money;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Quantity;
@@ -15,7 +16,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Order implements AggregateRoot<OrderId> {
+public class Order extends AbstractEventSourceEntity implements AggregateRoot<OrderId> {
 
     private OrderId id;
     private Long version;
@@ -122,21 +123,25 @@ public class Order implements AggregateRoot<OrderId> {
         this.verifyIfCanChangeToPlaced();
         this.changeStatus(OrderStatus.PLACED);
         this.setPlacedAt(OffsetDateTime.now());
+        publishDomainEvent(new OrderPlacedEvent(this.id(), this.customerId(), this.placedAt()));
     }
 
     public void cancel() {
         this.changeStatus(OrderStatus.CANCELED);
         this.setCanceledAt(OffsetDateTime.now());
+        publishDomainEvent(new OrderCanceledEvent(this.id(), this.customerId(), this.canceledAt()));
     }
 
     public void markAsPaid() {
         this.changeStatus(OrderStatus.PAID);
         this.setPaidAt(OffsetDateTime.now());
+        publishDomainEvent(new OrderPaidEvent(this.id(), this.customerId(), this.paidAt()));
     }
 
     public void markAsReady() {
         this.changeStatus(OrderStatus.READY);
         this.setReadyAt(OffsetDateTime.now());
+        publishDomainEvent(new OrderReadyEvent(this.id(), this.customerId(), this.readyAt()));
     }
 
     public void changePaymentMethod(PaymentMethod paymentMethod) {

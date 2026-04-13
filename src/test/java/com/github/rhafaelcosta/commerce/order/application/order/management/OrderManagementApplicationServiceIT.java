@@ -1,29 +1,43 @@
 package com.github.rhafaelcosta.commerce.order.application.order.management;
 
+import com.github.rhafaelcosta.commerce.order.application.customer.loyaltypoints.CustomerLoyaltyPointsApplicationService;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customers;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.*;
+import com.github.rhafaelcosta.commerce.order.infrastructure.listener.order.OrderEventListener;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @SpringBootTest
 @Transactional
 class OrderManagementApplicationServiceIT {
 
     @Autowired
-    private OrderManagementApplicationService service;
-
-    @Autowired
     private Orders orders;
 
     @Autowired
     private Customers customers;
+
+    @MockitoSpyBean
+    private OrderEventListener orderEventListener;
+
+    @Autowired
+    private OrderManagementApplicationService service;
+
+    @Autowired
+    private OrderManagementApplicationService orderManagementApplicationService;
+
+    @MockitoSpyBean
+    private CustomerLoyaltyPointsApplicationService loyaltyPointsApplicationService;
 
     @BeforeEach
     void setup() {
@@ -43,6 +57,8 @@ class OrderManagementApplicationServiceIT {
         Assertions.assertThat(updatedOrder).isPresent();
         Assertions.assertThat(updatedOrder.get().status()).isEqualTo(OrderStatus.CANCELED);
         Assertions.assertThat(updatedOrder.get().canceledAt()).isNotNull();
+
+        Mockito.verify(orderEventListener).listen(Mockito.any(OrderCanceledEvent.class));
     }
 
     @Test
@@ -73,6 +89,8 @@ class OrderManagementApplicationServiceIT {
         Assertions.assertThat(updatedOrder).isPresent();
         Assertions.assertThat(updatedOrder.get().status()).isEqualTo(OrderStatus.PAID);
         Assertions.assertThat(updatedOrder.get().paidAt()).isNotNull();
+
+        Mockito.verify(orderEventListener).listen(Mockito.any(OrderPaidEvent.class));
     }
 
     @Test
@@ -112,6 +130,12 @@ class OrderManagementApplicationServiceIT {
         Assertions.assertThat(updatedOrder).isPresent();
         Assertions.assertThat(updatedOrder.get().status()).isEqualTo(OrderStatus.READY);
         Assertions.assertThat(updatedOrder.get().readyAt()).isNotNull();
+
+        Mockito.verify(orderEventListener).listen(Mockito.any(OrderReadyEvent.class));
+        Mockito.verify(loyaltyPointsApplicationService).addLoyaltyPoints(
+                Mockito.any(UUID.class),
+                Mockito.any(String.class)
+        );
     }
 
     @Test

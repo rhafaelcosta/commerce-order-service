@@ -7,11 +7,13 @@ import com.github.rhafaelcosta.commerce.order.domain.model.customer.*;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.*;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.Product;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.ProductTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.infrastructure.listener.customer.CustomerEventListener;
 import io.hypersistence.tsid.TSID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -25,6 +27,9 @@ class CustomerLoyaltyPointsApplicationServiceIT {
 
     @Autowired
     private Customers customers;
+
+    @MockitoBean
+    private CustomerEventListener customerEventListener;
 
     @Autowired
     private CustomerLoyaltyPointsApplicationService loyaltyPointsService;

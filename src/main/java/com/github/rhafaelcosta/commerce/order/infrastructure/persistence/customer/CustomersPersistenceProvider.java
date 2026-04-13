@@ -47,6 +47,8 @@ public class CustomersPersistenceProvider implements Customers {
                         (CustomerPersistenceEntity persistenceEntity) -> update(aggregateRoot, persistenceEntity),
                         () -> insert(aggregateRoot)
                 );
+
+        aggregateRoot.clearDomainEvents();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.domain.model.customer;
 
+import com.github.rhafaelcosta.commerce.order.domain.model.AbstractEventSourceEntity;
 import com.github.rhafaelcosta.commerce.order.domain.model.AggregateRoot;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.*;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 import static com.github.rhafaelcosta.commerce.order.domain.model.ErrorMessages.VALIDATION_ERROR_FULLNAME_IS_NULL;
 
-public class Customer implements AggregateRoot<CustomerId> {
+public class Customer extends AbstractEventSourceEntity implements AggregateRoot<CustomerId> {
 
     private CustomerId id;
     private FullName fullName;
@@ -34,7 +35,7 @@ public class Customer implements AggregateRoot<CustomerId> {
                                            Document document,
                                            Boolean promotionNotificationsAllowed,
                                            Address address) {
-        return new Customer(
+        Customer customer = new Customer(
                 new CustomerId(),
                 null,
                 fullName,
@@ -49,6 +50,17 @@ public class Customer implements AggregateRoot<CustomerId> {
                 LoyaltyPoints.ZERO,
                 address
         );
+
+        customer.publishDomainEvent(
+                new CustomerRegisteredEvent(
+                        customer.id(),
+                        customer.fullName(),
+                        customer.email(),
+                        customer.registeredAt()
+                )
+        );
+
+        return customer;
     }
 
     @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")
@@ -101,6 +113,8 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.setAddress(this.address().toBuilder()
                 .number("Anonymized")
                 .complement(null).build());
+
+        this.publishDomainEvent(new CustomerArchivedEvent(this.id(), this.archivedAt()));
     }
 
     public void enablePromotionNotifications() {
