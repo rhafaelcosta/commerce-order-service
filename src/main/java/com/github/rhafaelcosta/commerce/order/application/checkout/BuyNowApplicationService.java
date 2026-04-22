@@ -2,7 +2,10 @@ package com.github.rhafaelcosta.commerce.order.application.checkout;
 
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Quantity;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.ZipCode;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customer;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerId;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerNotFoundException;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customers;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.*;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.shipping.OriginAddressService;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.shipping.ShippingCostService;
@@ -27,6 +30,7 @@ public class BuyNowApplicationService {
     private final OriginAddressService originAddressService;
 
     private final Orders orders;
+    private final Customers customers;
 
     private final ShippingInputDisassembler shippingInputDisassembler;
     private final BillingInputDisassembler billingInputDisassembler;
@@ -39,6 +43,7 @@ public class BuyNowApplicationService {
         CustomerId customerId = new CustomerId(input.getCustomerId());
         Quantity quantity = new Quantity(input.getQuantity());
 
+        Customer customer = customers.ofId(customerId).orElseThrow(CustomerNotFoundException::new);
         Product product = findProduct(new ProductId(input.getProductId()));
 
         var shippingCalculationResult = calculateShippingCost(input.getShipping());
@@ -49,7 +54,7 @@ public class BuyNowApplicationService {
         Billing billing = billingInputDisassembler.toDomainModel(input.getBilling());
 
         Order order = buyNowService.buyNow(
-                product, customerId, billing, shipping, quantity, paymentMethod
+                product, customer, billing, shipping, quantity, paymentMethod
         );
 
         orders.add(order);

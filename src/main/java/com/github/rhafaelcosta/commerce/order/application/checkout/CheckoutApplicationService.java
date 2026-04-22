@@ -1,6 +1,9 @@
 package com.github.rhafaelcosta.commerce.order.application.checkout;
 
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.ZipCode;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customer;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerNotFoundException;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customers;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.CheckoutService;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.Order;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.Orders;
@@ -26,6 +29,7 @@ import java.util.Objects;
 public class CheckoutApplicationService {
 
     private final Orders orders;
+    private final Customers customers;
     private final ShoppingCarts shoppingCarts;
     private final CheckoutService checkoutService;
 
@@ -43,10 +47,13 @@ public class CheckoutApplicationService {
 
         ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId).orElseThrow(ShoppingCartNotFoundException::new);
+        Customer customer = customers.ofId(shoppingCart.customerId()).orElseThrow(CustomerNotFoundException::new);
 
         var shippingCalculationResult = calculateShippingCost(input.getShipping());
 
-        Order order = checkoutService.checkout(shoppingCart,
+        Order order = checkoutService.checkout(
+                customer,
+                shoppingCart,
                 billingInputDisassembler.toDomainModel(input.getBilling()),
                 shippingInputDisassembler.toDomainModel(input.getShipping(), shippingCalculationResult),
                 paymentMethod);
