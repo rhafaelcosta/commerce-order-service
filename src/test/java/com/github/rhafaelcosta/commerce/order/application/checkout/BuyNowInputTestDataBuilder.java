@@ -1,6 +1,8 @@
 package com.github.rhafaelcosta.commerce.order.application.checkout;
 
 import com.github.rhafaelcosta.commerce.order.application.commons.AddressData;
+import com.github.rhafaelcosta.commerce.order.application.order.query.BillingData;
+import com.github.rhafaelcosta.commerce.order.application.order.query.RecipientData;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.ProductTestDataBuilder;
 

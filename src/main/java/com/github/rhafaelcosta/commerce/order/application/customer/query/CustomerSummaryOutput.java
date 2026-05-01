@@ -1,6 +1,5 @@
-package com.github.rhafaelcosta.commerce.order.application.customer.management;
+package com.github.rhafaelcosta.commerce.order.application.customer.query;
 
-import com.github.rhafaelcosta.commerce.order.application.commons.AddressData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +10,10 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class CustomerOutput {
-
+@NoArgsConstructor
+@AllArgsConstructor
+public class CustomerSummaryOutput {
     private UUID id;
     private String firstName;
     private String lastName;
@@ -28,7 +26,4 @@ public class CustomerOutput {
     private OffsetDateTime archivedAt;
     private Boolean promotionNotificationsAllowed;
     private Boolean archived;
-    private AddressData address;
-
 }
-

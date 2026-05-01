@@ -1,7 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.customer.management;
 
 import com.github.rhafaelcosta.commerce.order.application.commons.AddressData;
-import com.github.rhafaelcosta.commerce.order.application.utility.Mapper;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.*;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.*;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CustomerManagementApplicationService {
 
-    private final Mapper mapper;
     private final Customers customers;
     private final CustomerRegistrationService customerRegistration;
 
@@ -45,15 +43,6 @@ public class CustomerManagementApplicationService {
         customers.add(customer);
 
         return customer.id().value();
-    }
-
-    @Transactional(readOnly = true)
-    public CustomerOutput findById(UUID customerId) {
-        Objects.requireNonNull(customerId);
-        Customer customer = customers.ofId(new CustomerId(customerId))
-                .orElseThrow(CustomerNotFoundException::new);
-
-        return mapper.convert(customer, CustomerOutput.class);
     }
 
     @Transactional

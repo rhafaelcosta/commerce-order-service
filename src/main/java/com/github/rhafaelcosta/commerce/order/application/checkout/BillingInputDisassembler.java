@@ -1,6 +1,7 @@
 package com.github.rhafaelcosta.commerce.order.application.checkout;
 
 import com.github.rhafaelcosta.commerce.order.application.commons.AddressData;
+import com.github.rhafaelcosta.commerce.order.application.order.query.BillingData;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.*;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.Billing;
 import org.springframework.stereotype.Component;

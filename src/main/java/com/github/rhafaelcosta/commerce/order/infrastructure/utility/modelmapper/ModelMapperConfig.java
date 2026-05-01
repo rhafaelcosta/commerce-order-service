@@ -1,10 +1,15 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.utility.modelmapper;
 
-import com.github.rhafaelcosta.commerce.order.application.customer.management.CustomerOutput;
+import com.github.rhafaelcosta.commerce.order.application.customer.query.CustomerOutput;
+import com.github.rhafaelcosta.commerce.order.application.order.query.OrderDetailOutput;
+import com.github.rhafaelcosta.commerce.order.application.order.query.OrderItemDetailOutput;
 import com.github.rhafaelcosta.commerce.order.application.utility.Mapper;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.FullName;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.BirthDate;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customer;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderItemPersistenceEntity;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntity;
+import io.hypersistence.tsid.TSID;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -44,6 +49,15 @@ public class ModelMapperConfig {
                 return birthDate.value();
             };
 
+    private static final Converter<Long, String> longToStringTSIDConverter =
+            mappingContext -> {
+                Long tsidAsLong = mappingContext.getSource();
+                if (tsidAsLong == null) {
+                    return null;
+                }
+                return new TSID(tsidAsLong).toString();
+            };
+
     @Bean
     public Mapper mapper() {
         ModelMapper modelMapper = new ModelMapper();
@@ -67,6 +81,19 @@ public class ModelMapperConfig {
                 .addMappings(mapping ->
                         mapping.using(birthDateToLocalDateConverter)
                                 .map(Customer::birthDate, CustomerOutput::setBirthDate));
+
+        modelMapper.createTypeMap(OrderPersistenceEntity.class, OrderDetailOutput.class)
+                .addMappings(mapping ->
+                        mapping.using(longToStringTSIDConverter)
+                                .map(OrderPersistenceEntity::getId, OrderDetailOutput::setId));
+
+        modelMapper.createTypeMap(OrderItemPersistenceEntity.class, OrderItemDetailOutput.class)
+                .addMappings(mapping ->
+                        mapping.using(longToStringTSIDConverter)
+                                .map(OrderItemPersistenceEntity::getId, OrderItemDetailOutput::setId))
+                .addMappings(mapping ->
+                        mapping.using(longToStringTSIDConverter)
+                                .map(OrderItemPersistenceEntity::getOrderId, OrderItemDetailOutput::setOrderId));
     }
 
 }

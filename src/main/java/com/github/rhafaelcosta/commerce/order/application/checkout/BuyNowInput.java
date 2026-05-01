@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.checkout;
 
+import com.github.rhafaelcosta.commerce.order.application.order.query.BillingData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
