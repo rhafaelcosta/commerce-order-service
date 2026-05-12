@@ -1,6 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.domain.model.customer;
 
-import com.github.rhafaelcosta.commerce.order.domain.model.DomainException;
+import com.github.rhafaelcosta.commerce.order.domain.model.DomainEntityNotFoundException;
 
-public class CustomerNotFoundException extends DomainException {
+public class CustomerNotFoundException extends DomainEntityNotFoundException {
 }
