@@ -3,6 +3,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.9'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.cloud.contract' version '4.3.3'
 }
 
 group = 'com.github.rhafaelcosta.commerce'
@@ -25,6 +26,10 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2025.0.2")
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -39,6 +44,7 @@ dependencies {
 	testImplementation 'org.assertj:assertj-core:3.27.3'
 	testImplementation 'io.rest-assured:spring-mock-mvc'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
 
 	runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok'
@@ -48,8 +54,14 @@ dependencies {
 	mockitoAgent('org.mockito:mockito-core:5.14.2') {transitive = false}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+contracts {
+	packageWithBaseClasses = "com.github.rhafaelcosta.commerce.order.contract.base"
 }
 
 test {
@@ -59,8 +71,16 @@ test {
 	jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
 }
 
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
 tasks.named('check') {
-	dependsOn(test, integrationTest)
+	dependsOn(test, contractTest, integrationTest)
+}
+
+tasks.named('contractTest') {
+	useJUnitPlatform()
 }
 
 tasks.register('integrationTest', Test) {
