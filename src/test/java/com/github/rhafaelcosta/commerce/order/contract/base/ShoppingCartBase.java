@@ -4,7 +4,7 @@ import com.github.rhafaelcosta.commerce.order.application.shoppingcart.managemen
 import com.github.rhafaelcosta.commerce.order.application.shoppingcart.management.ShoppingCartOutputTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.application.shoppingcart.query.ShoppingCartQueryService;
 import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCartNotFoundException;
-import com.github.rhafaelcosta.commerce.order.presentation.ShoppingCartController;
+import com.github.rhafaelcosta.commerce.order.presentation.shoppingcart.ShoppingCartController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;

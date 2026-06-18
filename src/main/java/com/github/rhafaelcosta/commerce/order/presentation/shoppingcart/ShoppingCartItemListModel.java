@@ -1,4 +1,4 @@
-package com.github.rhafaelcosta.commerce.order.presentation;
+package com.github.rhafaelcosta.commerce.order.presentation.shoppingcart;
 
 import com.github.rhafaelcosta.commerce.order.application.shoppingcart.query.ShoppingCartItemOutput;
 import lombok.AllArgsConstructor;

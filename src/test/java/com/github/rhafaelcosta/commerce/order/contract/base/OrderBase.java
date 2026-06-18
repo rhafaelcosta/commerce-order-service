@@ -9,7 +9,7 @@ import com.github.rhafaelcosta.commerce.order.application.order.query.OrderFilte
 import com.github.rhafaelcosta.commerce.order.application.order.query.OrderQueryService;
 import com.github.rhafaelcosta.commerce.order.application.order.query.OrderSummaryOutputTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderNotFoundException;
-import com.github.rhafaelcosta.commerce.order.presentation.OrderController;
+import com.github.rhafaelcosta.commerce.order.presentation.order.OrderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;

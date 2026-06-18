@@ -29,7 +29,7 @@ public class ShoppingCartManagementApplicationService {
         ProductId productId = new ProductId(input.getProductId());
 
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId).orElseThrow(ShoppingCartNotFoundException::new);
-        Product product = productCatalogService.ofId(productId).orElseThrow(ProductNotFoundException::new);
+        Product product = productCatalogService.ofId(productId).orElseThrow(() -> new ProductNotFoundException(productId));
 
         shoppingCart.addItem(product, new Quantity(input.getQuantity()));
         shoppingCarts.add(shoppingCart);

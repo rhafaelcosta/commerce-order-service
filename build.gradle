@@ -41,10 +41,11 @@ dependencies {
 	implementation 'com.fasterxml.uuid:java-uuid-generator:5.1.0'
 
 	testImplementation 'io.rest-assured:rest-assured'
-	testImplementation 'org.assertj:assertj-core:3.27.3'
 	testImplementation 'io.rest-assured:spring-mock-mvc'
+	testImplementation 'org.assertj:assertj-core:3.27.3'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
+	testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
 
 	runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok'

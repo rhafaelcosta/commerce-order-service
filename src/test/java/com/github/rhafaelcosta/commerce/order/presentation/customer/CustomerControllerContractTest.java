@@ -1,9 +1,10 @@
-package com.github.rhafaelcosta.commerce.order.presentation;
+package com.github.rhafaelcosta.commerce.order.presentation.customer;
 
 import com.github.rhafaelcosta.commerce.order.application.commons.AddressData;
 import com.github.rhafaelcosta.commerce.order.application.customer.management.CustomerInput;
 import com.github.rhafaelcosta.commerce.order.application.customer.management.CustomerManagementApplicationService;
 import com.github.rhafaelcosta.commerce.order.application.customer.query.*;
+import com.github.rhafaelcosta.commerce.order.application.shoppingcart.query.ShoppingCartQueryService;
 import com.github.rhafaelcosta.commerce.order.domain.model.DomainException;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerEmailIsInUseException;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerNotFoundException;
@@ -34,6 +35,9 @@ class CustomerControllerContractTest {
 
     @MockitoBean
     private CustomerQueryService customerQueryService;
+
+    @MockitoBean
+    private ShoppingCartQueryService shoppingCartQueryService;
 
     @MockitoBean
     private CustomerManagementApplicationService customerManagementApplicationService;

@@ -1,4 +1,4 @@
-package com.github.rhafaelcosta.commerce.order.presentation;
+package com.github.rhafaelcosta.commerce.order.presentation.customer;
 
 import com.github.rhafaelcosta.commerce.order.application.customer.management.CustomerInput;
 import com.github.rhafaelcosta.commerce.order.application.customer.management.CustomerManagementApplicationService;
@@ -7,6 +7,9 @@ import com.github.rhafaelcosta.commerce.order.application.customer.query.Custome
 import com.github.rhafaelcosta.commerce.order.application.customer.query.CustomerOutput;
 import com.github.rhafaelcosta.commerce.order.application.customer.query.CustomerQueryService;
 import com.github.rhafaelcosta.commerce.order.application.customer.query.CustomerSummaryOutput;
+import com.github.rhafaelcosta.commerce.order.application.shoppingcart.query.ShoppingCartOutput;
+import com.github.rhafaelcosta.commerce.order.application.shoppingcart.query.ShoppingCartQueryService;
+import com.github.rhafaelcosta.commerce.order.presentation.PageModel;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 public class CustomerController {
 
     private final CustomerQueryService customerQueryService;
+    private final ShoppingCartQueryService shoppingCartQueryService;
     private final CustomerManagementApplicationService customerManagementApplicationService;
 
     @GetMapping
@@ -35,6 +39,11 @@ public class CustomerController {
     @GetMapping("/{id}")
     public CustomerOutput findById(@PathVariable UUID id) {
         return customerQueryService.findById(id);
+    }
+
+    @GetMapping("/{id}/shopping-cart")
+    public ShoppingCartOutput findShoppingCartByCustomerId(@PathVariable UUID id) {
+        return shoppingCartQueryService.findByCustomerId(id);
     }
 
     @PostMapping

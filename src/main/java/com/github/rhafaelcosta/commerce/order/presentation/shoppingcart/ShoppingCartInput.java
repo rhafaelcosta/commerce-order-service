@@ -1,4 +1,4 @@
-package com.github.rhafaelcosta.commerce.order.presentation;
+package com.github.rhafaelcosta.commerce.order.presentation.shoppingcart;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
