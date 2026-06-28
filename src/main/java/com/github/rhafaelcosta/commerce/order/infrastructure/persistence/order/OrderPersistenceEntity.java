@@ -83,7 +83,7 @@ public class OrderPersistenceEntity extends AbstractAggregateRoot<OrderPersisten
     @AttributeOverride(name = "address.zipCode", column = @Column(name = "shipping_address_zipCode"))
     private ShippingEmbeddable shipping;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItemPersistenceEntity> items = new HashSet<>();
 
     @Builder

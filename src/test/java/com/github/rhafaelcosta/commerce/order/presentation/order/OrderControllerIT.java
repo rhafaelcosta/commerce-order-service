@@ -4,30 +4,26 @@ import com.github.rhafaelcosta.commerce.order.application.checkout.BuyNowInput;
 import com.github.rhafaelcosta.commerce.order.application.checkout.BuyNowInputTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.application.order.query.OrderDetailOutput;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderId;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityRepository;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
 import com.github.rhafaelcosta.commerce.order.utils.CommercePlaftformResourceUtils;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
+import com.github.tomakehurst.wiremock.http.Fault;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
 
-import static com.github.rhafaelcosta.commerce.order.infrastructure.persistence.entity.ShoppingCartPersistenceEntityTestDataBuilder.existingShoppingCart;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static io.restassured.config.JsonConfig.jsonConfig;
 
@@ -36,12 +32,9 @@ import static io.restassured.config.JsonConfig.jsonConfig;
 //        stubsMode = StubRunnerProperties.StubsMode.LOCAL,
 //        ids = "com.github.rhafaelcosta.commerce:product-catalog-service:0.0.1-SNAPSHOT:8781"
 //)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Sql(scripts = "classpath:db/testdata/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class OrderControllerIT {
-
-    private static final UUID validProductId = UUID.fromString("fffe6ec2-7103-48b3-8e4f-3b58e43fb75a");
-    private static final UUID validCustomerId = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
-    private static final UUID validShoppingCartId = UUID.fromString("4f31582a-66e6-4601-a9d3-ff608c2d4461");
 
     @LocalServerPort
     private int port;
@@ -49,24 +42,25 @@ class OrderControllerIT {
     @Autowired
     private OrderPersistenceEntityRepository orderRepository;
 
-    @Autowired
-    private CustomerPersistenceEntityRepository customerRepository;
+    private static final UUID validProductId = UUID.fromString("fffe6ec2-7103-48b3-8e4f-3b58e43fb75a");
+    private static final UUID validCustomerId = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
 
-    @Autowired
-    private ShoppingCartPersistenceEntityRepository shoppingCartRepository;
-
-    private WireMockServer wireMockRapidex;
-    private WireMockServer wireMockProductCatalog;
+    private static WireMockServer wireMockRapidex;
+    private static WireMockServer wireMockProductCatalog;
 
     @BeforeEach
     void setup() {
+        wireMockRapidex.resetToDefaultMappings();
+        wireMockProductCatalog.resetToDefaultMappings();
+
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
+        RestAssured.config().jsonConfig(jsonConfig()
+                .numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
+    }
 
-        RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
-
-        initDatabase();
-
+    @BeforeAll
+    static void startWireMock() {
         wireMockRapidex = new WireMockServer(options()
                 .port(8780)
                 .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex")
@@ -81,21 +75,17 @@ class OrderControllerIT {
         wireMockProductCatalog.start();
     }
 
-    @AfterEach
-    void after() {
+    @AfterAll
+    static void stopWireMock() {
         wireMockRapidex.stop();
         wireMockProductCatalog.stop();
     }
 
-    private void initDatabase() {
-        customerRepository.saveAndFlush(
-                CustomerPersistenceEntityTestDataBuilder.aCustomer().id(validCustomerId).build()
-        );
-    }
-
     @Test
+    @Order(1)
     void shouldCreateOrderUsingProduct() {
         String json = CommercePlaftformResourceUtils.readContent("json/create-order-with-product.json");
+
         String createdOrderId = RestAssured
             .given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -109,7 +99,7 @@ class OrderControllerIT {
                 .statusCode(HttpStatus.CREATED.value())
                 .body("id", Matchers.not(Matchers.emptyString()),
                         "customer.id", Matchers.is(validCustomerId.toString()))
-                .extract()
+            .extract()
                 .jsonPath().getString("id");
 
         boolean orderExists = orderRepository.existsById(new OrderId(createdOrderId).value().toLong());
@@ -118,6 +108,7 @@ class OrderControllerIT {
     }
 
     @Test
+    @Order(2)
     void shouldCreateOrderUsingProduct_DTO() {
         BuyNowInput input = BuyNowInputTestDataBuilder.aBuyNowInput()
                 .productId(validProductId)
@@ -147,26 +138,7 @@ class OrderControllerIT {
     }
 
     @Test
-    void shouldNotCreateOrderUsingProductWhenProductAPIIsUnavailable() {
-        String json = CommercePlaftformResourceUtils.readContent("json/create-order-with-product.json");
-
-        wireMockProductCatalog.stop();
-
-        RestAssured
-            .given()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType("application/vnd.order-with-product.v1+json")
-                .body(json)
-            .when()
-                .post("/api/v1/orders")
-            .then()
-                .assertThat()
-                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.GATEWAY_TIMEOUT.value());
-
-    }
-
-    @Test
+    @Order(3)
     void shouldNotCreateOrderUsingProductWhenProductNotExists() {
         String json = CommercePlaftformResourceUtils.readContent("json/create-order-with-invalid-product.json");
 
@@ -185,6 +157,7 @@ class OrderControllerIT {
     }
 
     @Test
+    @Order(4)
     void shouldNotCreateOrderUsingProductWhenCustomerWasNotFound() {
         String json = CommercePlaftformResourceUtils.readContent("json/create-order-with-product-and-invalid-customer.json");
         RestAssured
@@ -201,13 +174,8 @@ class OrderControllerIT {
     }
 
     @Test
+    @Order(5)
     void shouldCreateOrderUsingShoppingCart() {
-        var shoppingCartPersistence = existingShoppingCart()
-                .id(validShoppingCartId)
-                .customer(customerRepository.getReferenceById(validCustomerId))
-                .build();
-        shoppingCartRepository.save(shoppingCartPersistence);
-
         String json = CommercePlaftformResourceUtils.readContent("json/create-order-with-shopping-cart.json");
 
         OrderDetailOutput orderDetailOutput = RestAssured
@@ -230,6 +198,29 @@ class OrderControllerIT {
 
         boolean orderExists = orderRepository.existsById(new OrderId(orderDetailOutput.getId()).value().toLong());
         Assertions.assertThat(orderExists).isTrue();
+    }
+
+    @Test
+    @Order(6)
+    void shouldNotCreateOrderUsingProductWhenProductAPIIsUnavailable() {
+        String json = CommercePlaftformResourceUtils.readContent("json/create-order-with-product.json");
+
+        wireMockProductCatalog.stubFor(any(anyUrl())
+                .atPriority(1)
+                .willReturn(aResponse().withFault(Fault.CONNECTION_RESET_BY_PEER)));
+
+        RestAssured
+            .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/vnd.order-with-product.v1+json")
+                .body(json)
+            .when()
+                .post("/api/v1/orders")
+            .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.GATEWAY_TIMEOUT.value());
+
     }
 
 }

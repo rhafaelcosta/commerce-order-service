@@ -1,19 +1,19 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.persistence.provider;
 
-import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Money;
+import com.github.rhafaelcosta.commerce.order.domain.model.commons.Quantity;
+import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.domain.model.product.Product;
+import com.github.rhafaelcosta.commerce.order.domain.model.product.ProductId;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.ProductTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCart;
 import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCartItem;
-import com.github.rhafaelcosta.commerce.order.domain.model.product.Product;
-import com.github.rhafaelcosta.commerce.order.domain.model.commons.Quantity;
-import com.github.rhafaelcosta.commerce.order.domain.model.product.ProductId;
 import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityAssembler;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityAssembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.SpringDataAuditingConfig;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityAssembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityDisassembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomersPersistenceProvider;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityAssembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityDisassembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.shoppingcart.ShoppingCartUpdateProvider;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.shoppingcart.ShoppingCartsPersistenceProvider;
@@ -21,9 +21,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,8 @@ import org.springframework.transaction.annotation.Transactional;
         ShoppingCartPersistenceEntityAssembler.class,
         ShoppingCartPersistenceEntityDisassembler.class,
 })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class ShoppingCartUpdateProviderIT {
 
     private final ShoppingCartUpdateProvider shoppingCartUpdateProvider;

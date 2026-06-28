@@ -28,7 +28,7 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
 
     private final EntityManager entityManager;
 
-    private static final String FIND_BY_ID_AS_OUTPUT_JPQL = """
+    private static final String findByIdAsOutputJPQL = """
             SELECT new com.github.rhafaelcosta.commerce.order.application.customer.query.CustomerOutput(
                 c.id,
                 c.firstName,
@@ -58,11 +58,10 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
     @Override
     public CustomerOutput findById(UUID customerId) {
         try {
-            TypedQuery<CustomerOutput> query = entityManager
-                    .createQuery(FIND_BY_ID_AS_OUTPUT_JPQL, CustomerOutput.class);
+            TypedQuery<CustomerOutput> query = entityManager.createQuery(findByIdAsOutputJPQL, CustomerOutput.class);
             query.setParameter("id", customerId);
             return query.getSingleResult();
-        } catch (NoResultException _) {
+        } catch (NoResultException e) {
             throw new CustomerNotFoundException();
         }
     }

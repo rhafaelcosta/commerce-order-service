@@ -1,23 +1,23 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.persistence.provider;
 
-import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.Order;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderStatus;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderTestDataBuilder;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityAssembler;
-import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityAssembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.SpringDataAuditingConfig;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityAssembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityDisassembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomersPersistenceProvider;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityAssembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityDisassembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrderPersistenceEntityRepository;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.OrdersPersistenceProvider;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,28 +31,18 @@ import org.springframework.transaction.annotation.Transactional;
         CustomerPersistenceEntityAssembler.class,
         CustomerPersistenceEntityDisassembler.class
 })
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
 class OrdersPersistenceProviderIT {
 
     private final OrdersPersistenceProvider persistenceProvider;
     private final OrderPersistenceEntityRepository entityRepository;
-    private final CustomersPersistenceProvider customersPersistenceProvider;
 
     @Autowired
     public OrdersPersistenceProviderIT(OrdersPersistenceProvider persistenceProvider,
-                                       OrderPersistenceEntityRepository entityRepository,
-                                       CustomersPersistenceProvider customersPersistenceProvider) {
+                                       OrderPersistenceEntityRepository entityRepository) {
         this.entityRepository = entityRepository;
         this.persistenceProvider = persistenceProvider;
-        this.customersPersistenceProvider = customersPersistenceProvider;
-    }
-
-    @BeforeEach
-    void setup() {
-        if (!customersPersistenceProvider.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
-            customersPersistenceProvider.add(
-                    CustomerTestDataBuilder.existingCustomer().build()
-            );
-        }
     }
 
     @Test
