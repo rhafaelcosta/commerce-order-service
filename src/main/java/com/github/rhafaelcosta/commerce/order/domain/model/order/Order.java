@@ -34,6 +34,7 @@ public class Order extends AbstractEventSourceEntity implements AggregateRoot<Or
     private Shipping shipping;
 
     private OrderStatus status;
+    private CreditCardId creditCardId;
     private PaymentMethod paymentMethod;
 
     private Set<OrderItem> items;
@@ -52,7 +53,8 @@ public class Order extends AbstractEventSourceEntity implements AggregateRoot<Or
                  Shipping shipping,
                  OrderStatus status,
                  PaymentMethod paymentMethod,
-                 Set<OrderItem> items) {
+                 Set<OrderItem> items,
+                 CreditCardId creditCardId) {
         this.setId(id);
         this.setVersion(version);
         this.setCustomerId(customerId);
@@ -65,6 +67,7 @@ public class Order extends AbstractEventSourceEntity implements AggregateRoot<Or
         this.setBilling(billing);
         this.setShipping(shipping);
         this.setStatus(status);
+        this.setCreditCardId(creditCardId);
         this.setPaymentMethod(paymentMethod);
         this.setItems(items);
     }
@@ -84,7 +87,8 @@ public class Order extends AbstractEventSourceEntity implements AggregateRoot<Or
                 null,
                 OrderStatus.DRAFT,
                 null,
-                new HashSet<>()
+                new HashSet<>(),
+                null
         );
     }
 
@@ -144,8 +148,13 @@ public class Order extends AbstractEventSourceEntity implements AggregateRoot<Or
         publishDomainEvent(new OrderReadyEvent(this.id(), this.customerId(), this.readyAt()));
     }
 
-    public void changePaymentMethod(PaymentMethod paymentMethod) {
+    public void changePaymentMethod(PaymentMethod paymentMethod, CreditCardId creditCardId) {
         Objects.requireNonNull(paymentMethod);
+
+        if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
+            Objects.requireNonNull(creditCardId);
+            this.setCreditCardId(creditCardId);
+        }
 
         this.verifyIfChangeable();
         this.setPaymentMethod(paymentMethod);
@@ -253,6 +262,10 @@ public class Order extends AbstractEventSourceEntity implements AggregateRoot<Or
         return status;
     }
 
+    public CreditCardId getCreditCardId() {
+        return creditCardId;
+    }
+
     public PaymentMethod paymentMethod() {
         return paymentMethod;
     }
@@ -314,6 +327,10 @@ public class Order extends AbstractEventSourceEntity implements AggregateRoot<Or
     private void setStatus(OrderStatus status) {
         Objects.requireNonNull(status);
         this.status = status;
+    }
+
+    private void setCreditCardId(CreditCardId creditCardId) {
+        this.creditCardId = creditCardId;
     }
 
     private void setPaymentMethod(PaymentMethod paymentMethod) {

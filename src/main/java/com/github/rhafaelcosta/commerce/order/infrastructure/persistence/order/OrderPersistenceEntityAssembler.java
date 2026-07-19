@@ -44,6 +44,10 @@ public class OrderPersistenceEntityAssembler {
         orderPersistenceEntity.setBilling(toBillingEmbeddable(order.billing()));
         orderPersistenceEntity.setShipping(toShippingEmbeddable(order.shipping()));
 
+        if (order.getCreditCardId() != null) {
+            orderPersistenceEntity.setCreditCardId(order.getCreditCardId().id());
+        }
+
         Set<OrderItemPersistenceEntity> mergedItems = mergeItems(order, orderPersistenceEntity);
         orderPersistenceEntity.replaceItems(mergedItems);
 
@@ -101,6 +105,7 @@ public class OrderPersistenceEntityAssembler {
                 .lastName(billing.fullName().lastName())
                 .document(billing.document().value())
                 .phone(billing.phone().value())
+                .email(billing.email().value())
                 .address(toAddressEmbeddable(billing.address()))
                 .build();
     }

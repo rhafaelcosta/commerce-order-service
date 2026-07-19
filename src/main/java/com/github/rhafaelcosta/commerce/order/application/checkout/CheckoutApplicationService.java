@@ -1,13 +1,11 @@
 package com.github.rhafaelcosta.commerce.order.application.checkout;
 
+import com.github.rhafaelcosta.commerce.order.domain.model.DomainException;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.ZipCode;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customer;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerNotFoundException;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customers;
-import com.github.rhafaelcosta.commerce.order.domain.model.order.CheckoutService;
-import com.github.rhafaelcosta.commerce.order.domain.model.order.Order;
-import com.github.rhafaelcosta.commerce.order.domain.model.order.Orders;
-import com.github.rhafaelcosta.commerce.order.domain.model.order.PaymentMethod;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.*;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.shipping.OriginAddressService;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.shipping.ShippingCostService;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.Product;
@@ -45,6 +43,14 @@ public class CheckoutApplicationService {
         Objects.requireNonNull(input);
         PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
 
+        CreditCardId creditCardId = null;
+        if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)){
+            if (input.getCreditCardId() == null) {
+                throw new DomainException("Credit card id is required");
+            }
+            creditCardId = new CreditCardId(input.getCreditCardId());
+        }
+
         ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId).orElseThrow(ShoppingCartNotFoundException::new);
         Customer customer = customers.ofId(shoppingCart.customerId()).orElseThrow(CustomerNotFoundException::new);
@@ -56,7 +62,9 @@ public class CheckoutApplicationService {
                 shoppingCart,
                 billingInputDisassembler.toDomainModel(input.getBilling()),
                 shippingInputDisassembler.toDomainModel(input.getShipping(), shippingCalculationResult),
-                paymentMethod);
+                paymentMethod,
+                creditCardId
+        );
 
         orders.add(order);
         shoppingCarts.add(shoppingCart);

@@ -1,6 +1,7 @@
 package com.github.rhafaelcosta.commerce.order.application.checkout;
 
 import com.github.rhafaelcosta.commerce.order.application.order.query.BillingData;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.CreditCardId;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,4 +38,6 @@ public class BuyNowInput {
 
     @NotBlank
     private String paymentMethod;
+
+    private UUID creditCardId;
 }

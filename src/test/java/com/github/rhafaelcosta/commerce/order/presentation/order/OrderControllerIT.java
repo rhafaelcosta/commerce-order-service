@@ -8,12 +8,14 @@ import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.O
 import com.github.rhafaelcosta.commerce.order.utils.CommercePlaftformResourceUtils;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
-import com.github.tomakehurst.wiremock.http.Fault;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -23,7 +25,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static io.restassured.config.JsonConfig.jsonConfig;
 
@@ -45,22 +46,16 @@ class OrderControllerIT {
     private static final UUID validProductId = UUID.fromString("fffe6ec2-7103-48b3-8e4f-3b58e43fb75a");
     private static final UUID validCustomerId = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
 
-    private static WireMockServer wireMockRapidex;
-    private static WireMockServer wireMockProductCatalog;
+    private WireMockServer wireMockRapidex;
+    private WireMockServer wireMockProductCatalog;
 
     @BeforeEach
     void setup() {
-        wireMockRapidex.resetToDefaultMappings();
-        wireMockProductCatalog.resetToDefaultMappings();
-
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
-        RestAssured.config().jsonConfig(jsonConfig()
-                .numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
-    }
 
-    @BeforeAll
-    static void startWireMock() {
+        RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
+
         wireMockRapidex = new WireMockServer(options()
                 .port(8780)
                 .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex")
@@ -75,8 +70,8 @@ class OrderControllerIT {
         wireMockProductCatalog.start();
     }
 
-    @AfterAll
-    static void stopWireMock() {
+    @AfterEach
+    void after() {
         wireMockRapidex.stop();
         wireMockProductCatalog.stop();
     }
@@ -110,9 +105,11 @@ class OrderControllerIT {
     @Test
     @Order(2)
     void shouldCreateOrderUsingProduct_DTO() {
+        UUID creditCardId = UUID.randomUUID();
         BuyNowInput input = BuyNowInputTestDataBuilder.aBuyNowInput()
                 .productId(validProductId)
                 .customerId(validCustomerId)
+                .creditCardId(creditCardId)
                 .build();
 
         OrderDetailOutput orderDetailOutput = RestAssured
@@ -131,6 +128,7 @@ class OrderControllerIT {
             .extract()
                 .body().as(OrderDetailOutput.class);
 
+        Assertions.assertThat(orderDetailOutput.getCreditCardId()).isEqualTo(creditCardId);
         Assertions.assertThat(orderDetailOutput.getCustomer().getId()).isEqualTo(validCustomerId);
 
         boolean orderExists = orderRepository.existsById(new OrderId(orderDetailOutput.getId()).value().toLong());
@@ -205,9 +203,7 @@ class OrderControllerIT {
     void shouldNotCreateOrderUsingProductWhenProductAPIIsUnavailable() {
         String json = CommercePlaftformResourceUtils.readContent("json/create-order-with-product.json");
 
-        wireMockProductCatalog.stubFor(any(anyUrl())
-                .atPriority(1)
-                .willReturn(aResponse().withFault(Fault.CONNECTION_RESET_BY_PEER)));
+        wireMockProductCatalog.stop();
 
         RestAssured
             .given()

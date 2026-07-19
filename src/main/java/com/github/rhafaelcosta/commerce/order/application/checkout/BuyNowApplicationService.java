@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.checkout;
 
+import com.github.rhafaelcosta.commerce.order.domain.model.DomainException;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Quantity;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.ZipCode;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customer;
@@ -43,6 +44,14 @@ public class BuyNowApplicationService {
         CustomerId customerId = new CustomerId(input.getCustomerId());
         PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
 
+        CreditCardId creditCardId = null;
+        if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)){
+            if (input.getCreditCardId() == null) {
+                throw new DomainException("Credit card id is required");
+            }
+            creditCardId = new CreditCardId(input.getCreditCardId());
+        }
+
         Customer customer = customers.ofId(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
         Product product = productCatalogService.ofId(productId).orElseThrow(() -> new ProductNotFoundException(productId));
 
@@ -54,7 +63,7 @@ public class BuyNowApplicationService {
         Billing billing = billingInputDisassembler.toDomainModel(input.getBilling());
 
         Order order = buyNowService.buyNow(
-                product, customer, billing, shipping, quantity, paymentMethod
+                product, customer, billing, shipping, quantity, paymentMethod, creditCardId
         );
 
         orders.add(order);
