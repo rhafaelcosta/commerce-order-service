@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.domain.model.order;
 
+import com.github.rhafaelcosta.commerce.order.domain.model.AbstractDomainIT;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customers;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Money;
@@ -25,15 +26,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@Import({OrdersPersistenceProvider.class,
-        OrderPersistenceEntityAssembler.class,
-        OrderPersistenceEntityDisassembler.class,
-        CustomersPersistenceProvider.class,
-        CustomerPersistenceEntityAssembler.class,
-        CustomerPersistenceEntityDisassembler.class})
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class OrdersIT {
+class OrdersIT extends AbstractDomainIT {
 
     private final Orders orders;
     private final Customers customers;

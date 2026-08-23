@@ -9,6 +9,7 @@ import com.github.rhafaelcosta.commerce.order.domain.model.product.ProductTestDa
 import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCart;
 import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCartItem;
 import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.AbstractPersistenceIT;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.SpringDataAuditingConfig;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityAssembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityDisassembler;
@@ -28,7 +29,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-@DataJpaTest
 @Import({
         SpringDataAuditingConfig.class,
         ShoppingCartUpdateProvider.class,
@@ -39,9 +39,8 @@ import org.springframework.transaction.annotation.Transactional;
         ShoppingCartPersistenceEntityAssembler.class,
         ShoppingCartPersistenceEntityDisassembler.class,
 })
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class ShoppingCartUpdateProviderIT {
+class ShoppingCartUpdateProviderIT extends AbstractPersistenceIT {
 
     private final ShoppingCartUpdateProvider shoppingCartUpdateProvider;
     private final CustomersPersistenceProvider customersPersistenceProvider;

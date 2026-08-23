@@ -1,15 +1,14 @@
 package com.github.rhafaelcosta.commerce.order.domain.model.customer;
 
+import com.github.rhafaelcosta.commerce.order.domain.model.AbstractDomainIT;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-@SpringBootTest
-class CustomerRegistrationServiceIT {
+class CustomerRegistrationServiceIT extends AbstractDomainIT {
 
     @Autowired
     private CustomerRegistrationService customerRegistrationService;

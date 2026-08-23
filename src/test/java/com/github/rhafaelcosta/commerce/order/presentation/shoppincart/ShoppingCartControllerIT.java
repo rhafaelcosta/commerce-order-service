@@ -1,73 +1,41 @@
 package com.github.rhafaelcosta.commerce.order.presentation.shoppincart;
 
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
+import com.github.rhafaelcosta.commerce.order.presentation.AbstractPresentationIT;
 import com.github.rhafaelcosta.commerce.order.utils.CommercePlaftformResourceUtils;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import io.restassured.RestAssured;
-import io.restassured.path.json.config.JsonPathConfig;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static io.restassured.config.JsonConfig.jsonConfig;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "classpath:db/testdata/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
-class ShoppingCartControllerIT {
-
-    @LocalServerPort
-    private int port;
+class ShoppingCartControllerIT extends AbstractPresentationIT {
 
     @Autowired
     private ShoppingCartPersistenceEntityRepository shoppingCartRepository;
 
     private static final UUID validShoppingCartId = UUID.fromString("4f31582a-66e6-4601-a9d3-ff608c2d4461");
 
-    private WireMockServer wireMockRapidex;
-    private WireMockServer wireMockProductCatalog;
-
     @BeforeEach
     void setup() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        RestAssured.port = port;
-
-        RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
-
-        initWireMock();
+        super.beforeEach();
     }
 
-    private void initWireMock() {
-        wireMockRapidex = new WireMockServer(options()
-                .port(8780)
-                .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex")
-                .extensions(new ResponseTemplateTransformer(true)));
-
-        wireMockProductCatalog = new WireMockServer(options()
-                .port(8781)
-                .usingFilesUnderDirectory("src/test/resources/wiremock/product-catalog")
-                .extensions(new ResponseTemplateTransformer(true)));
-
-        wireMockRapidex.start();
-        wireMockProductCatalog.start();
+    @BeforeAll
+    static void setupBeforeAll() {
+        AbstractPresentationIT.initWireMock();
     }
 
-    @AfterEach
-    void after() {
-        wireMockRapidex.stop();
-        wireMockProductCatalog.stop();
+    @AfterAll
+    static void afterAll() {
+        AbstractPresentationIT.stopMock();
     }
 
     @Test

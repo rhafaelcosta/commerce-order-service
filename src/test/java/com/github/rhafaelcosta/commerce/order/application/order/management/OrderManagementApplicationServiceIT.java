@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.order.management;
 
+import com.github.rhafaelcosta.commerce.order.application.AbstractApplicationIT;
 import com.github.rhafaelcosta.commerce.order.application.customer.loyaltypoints.CustomerLoyaltyPointsApplicationService;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customers;
@@ -10,16 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@SpringBootTest
-@Transactional
-class OrderManagementApplicationServiceIT {
+class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private Orders orders;

@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.order.query;
 
+import com.github.rhafaelcosta.commerce.order.application.AbstractApplicationIT;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customer;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerId;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
@@ -11,14 +12,10 @@ import com.github.rhafaelcosta.commerce.order.domain.model.order.Orders;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
-class OrderQueryServiceIT {
+class OrderQueryServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private Orders orders;

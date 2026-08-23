@@ -1,7 +1,8 @@
 package com.github.rhafaelcosta.commerce.order.domain.model.order.shipping;
 
-import com.github.rhafaelcosta.commerce.order.domain.model.order.shipping.ShippingCostService.CalculationRequest;
+import com.github.rhafaelcosta.commerce.order.domain.model.AbstractDomainIT;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.ZipCode;
+import com.github.rhafaelcosta.commerce.order.domain.model.order.shipping.ShippingCostService.CalculationRequest;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import org.assertj.core.api.Assertions;
@@ -9,12 +10,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
-@SpringBootTest
-class ShippingCostServiceIT {
+class ShippingCostServiceIT extends AbstractDomainIT {
 
     @Autowired
     private ShippingCostService shippingCostService;

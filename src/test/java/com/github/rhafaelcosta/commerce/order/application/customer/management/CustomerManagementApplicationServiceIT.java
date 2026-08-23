@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.customer.management;
 
+import com.github.rhafaelcosta.commerce.order.application.AbstractApplicationIT;
 import com.github.rhafaelcosta.commerce.order.application.customer.notification.CustomerNotificationApplicationService;
 import com.github.rhafaelcosta.commerce.order.application.customer.query.CustomerOutput;
 import com.github.rhafaelcosta.commerce.order.application.customer.query.CustomerQueryService;
@@ -10,17 +11,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Transactional
-@SpringBootTest
-class CustomerManagementApplicationServiceIT {
+class CustomerManagementApplicationServiceIT extends AbstractApplicationIT {
 
     @MockitoSpyBean
     private CustomerEventListener customerEventListener;

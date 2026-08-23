@@ -3,6 +3,7 @@ package com.github.rhafaelcosta.commerce.order.infrastructure.persistence.provid
 import com.github.rhafaelcosta.commerce.order.domain.model.order.Order;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderStatus;
 import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.AbstractPersistenceIT;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.SpringDataAuditingConfig;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityAssembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityDisassembler;
@@ -14,26 +15,22 @@ import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.order.O
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-@DataJpaTest
 @Import({
         SpringDataAuditingConfig.class,
         OrdersPersistenceProvider.class,
+        CustomersPersistenceProvider.class,
         OrderPersistenceEntityAssembler.class,
         OrderPersistenceEntityDisassembler.class,
-        CustomersPersistenceProvider.class,
         CustomerPersistenceEntityAssembler.class,
-        CustomerPersistenceEntityDisassembler.class
+        CustomerPersistenceEntityDisassembler.class,
 })
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
-class OrdersPersistenceProviderIT {
+class OrdersPersistenceProviderIT extends AbstractPersistenceIT {
 
     private final OrdersPersistenceProvider persistenceProvider;
     private final OrderPersistenceEntityRepository entityRepository;

@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.shoppingcart.management;
 
+import com.github.rhafaelcosta.commerce.order.application.AbstractApplicationIT;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Quantity;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.*;
 import com.github.rhafaelcosta.commerce.order.domain.model.product.*;
@@ -9,17 +10,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@SpringBootTest
-@Transactional
-class ShoppingCartManagementApplicationServiceIT {
+class ShoppingCartManagementApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private Customers customers;

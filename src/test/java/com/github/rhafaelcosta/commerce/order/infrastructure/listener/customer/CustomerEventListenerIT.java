@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.infrastructure.listener.customer;
 
+import com.github.rhafaelcosta.commerce.order.application.AbstractApplicationIT;
 import com.github.rhafaelcosta.commerce.order.application.customer.loyaltypoints.CustomerLoyaltyPointsApplicationService;
 import com.github.rhafaelcosta.commerce.order.application.customer.notification.CustomerNotificationApplicationService;
 import com.github.rhafaelcosta.commerce.order.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
@@ -12,7 +13,6 @@ import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderReadyEvent
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -20,8 +20,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@SpringBootTest
-class CustomerEventListenerIT {
+class CustomerEventListenerIT extends AbstractApplicationIT {
 
     @MockitoSpyBean
     private CustomerEventListener customerEventListener;

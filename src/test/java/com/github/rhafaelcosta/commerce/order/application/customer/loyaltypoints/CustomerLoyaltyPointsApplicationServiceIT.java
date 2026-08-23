@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.customer.loyaltypoints;
 
+import com.github.rhafaelcosta.commerce.order.application.AbstractApplicationIT;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Email;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Money;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Quantity;
@@ -12,15 +13,11 @@ import io.hypersistence.tsid.TSID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@SpringBootTest
-@Transactional
-class CustomerLoyaltyPointsApplicationServiceIT {
+class CustomerLoyaltyPointsApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private Orders orders;

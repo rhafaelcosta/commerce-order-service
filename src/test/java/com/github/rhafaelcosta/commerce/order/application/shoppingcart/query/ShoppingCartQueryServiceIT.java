@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.shoppingcart.query;
 
+import com.github.rhafaelcosta.commerce.order.application.AbstractApplicationIT;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customer;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customers;
@@ -8,12 +9,8 @@ import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.Shopping
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
-class ShoppingCartQueryServiceIT {
+class ShoppingCartQueryServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private Customers customers;

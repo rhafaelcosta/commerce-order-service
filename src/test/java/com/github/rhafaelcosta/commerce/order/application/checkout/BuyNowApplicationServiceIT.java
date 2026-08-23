@@ -1,5 +1,6 @@
 package com.github.rhafaelcosta.commerce.order.application.checkout;
 
+import com.github.rhafaelcosta.commerce.order.application.AbstractApplicationIT;
 import com.github.rhafaelcosta.commerce.order.domain.model.commons.Money;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.Customers;
@@ -14,16 +15,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-@SpringBootTest
-@Transactional
-class BuyNowApplicationServiceIT {
+class BuyNowApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private BuyNowApplicationService buyNowApplicationService;

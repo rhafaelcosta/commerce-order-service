@@ -1,31 +1,22 @@
 package com.github.rhafaelcosta.commerce.order.presentation.customer;
 
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
+import com.github.rhafaelcosta.commerce.order.presentation.AbstractPresentationIT;
 import com.github.rhafaelcosta.commerce.order.utils.CommercePlaftformResourceUtils;
 import io.restassured.RestAssured;
-import io.restassured.path.json.config.JsonPathConfig;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
 
-import static io.restassured.config.JsonConfig.jsonConfig;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "classpath:db/testdata/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class CustomerControllerIT {
-
-    @LocalServerPort
-    private int port;
+class CustomerControllerIT extends AbstractPresentationIT {
 
     @Autowired
     private CustomerPersistenceEntityRepository customerRepository;
@@ -34,10 +25,17 @@ class CustomerControllerIT {
 
     @BeforeEach
     void setup() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        RestAssured.port = port;
+        super.beforeEach();
+    }
 
-        RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
+    @BeforeAll
+    static void setupBeforeAll() {
+        AbstractPresentationIT.initWireMock();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        AbstractPresentationIT.stopMock();
     }
 
     @Test

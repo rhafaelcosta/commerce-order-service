@@ -5,6 +5,7 @@ import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerId;
 import com.github.rhafaelcosta.commerce.order.domain.model.customer.CustomerTestDataBuilder;
 import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCart;
 import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.AbstractPersistenceIT;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.SpringDataAuditingConfig;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityAssembler;
 import com.github.rhafaelcosta.commerce.order.infrastructure.persistence.customer.CustomerPersistenceEntityDisassembler;
@@ -25,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
-@DataJpaTest
 @Import({
         SpringDataAuditingConfig.class,
         CustomersPersistenceProvider.class,
@@ -35,9 +35,8 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
         ShoppingCartPersistenceEntityAssembler.class,
         ShoppingCartPersistenceEntityDisassembler.class
 })
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
-class ShoppingCartsPersistenceProviderIT {
+class ShoppingCartsPersistenceProviderIT extends AbstractPersistenceIT {
 
     private final CustomersPersistenceProvider customersPersistenceProvider;
     private final ShoppingCartsPersistenceProvider shoppingCartPersistenceProvider;
