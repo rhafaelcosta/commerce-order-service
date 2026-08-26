@@ -1,15 +1,15 @@
 package com.github.rhafaelcosta.commerce.order.contract.base;
 
-import com.github.rhafaelcosta.commerce.order.application.checkout.BuyNowApplicationService;
-import com.github.rhafaelcosta.commerce.order.application.checkout.BuyNowInput;
-import com.github.rhafaelcosta.commerce.order.application.checkout.CheckoutApplicationService;
-import com.github.rhafaelcosta.commerce.order.application.checkout.CheckoutInput;
-import com.github.rhafaelcosta.commerce.order.application.order.query.OrderDetailOutputTestDataBuilder;
-import com.github.rhafaelcosta.commerce.order.application.order.query.OrderFilter;
-import com.github.rhafaelcosta.commerce.order.application.order.query.OrderQueryService;
-import com.github.rhafaelcosta.commerce.order.application.order.query.OrderSummaryOutputTestDataBuilder;
-import com.github.rhafaelcosta.commerce.order.domain.model.order.OrderNotFoundException;
-import com.github.rhafaelcosta.commerce.order.presentation.order.OrderController;
+import com.github.rhafaelcosta.commerce.order.core.application.checkout.BuyNowApplicationService;
+import com.github.rhafaelcosta.commerce.order.core.ports.in.checkout.BuyNowInput;
+import com.github.rhafaelcosta.commerce.order.core.application.checkout.CheckoutApplicationService;
+import com.github.rhafaelcosta.commerce.order.core.ports.in.checkout.CheckoutInput;
+import com.github.rhafaelcosta.commerce.order.core.application.order.OrderDetailOutputTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.core.ports.in.orders.OrderFilter;
+import com.github.rhafaelcosta.commerce.order.core.ports.in.orders.ForQueryingOrders;
+import com.github.rhafaelcosta.commerce.order.core.application.order.OrderSummaryOutputTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.core.domain.model.order.OrderNotFoundException;
+import com.github.rhafaelcosta.commerce.order.infrastructure.adapters.in.web.order.OrderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -30,7 +30,7 @@ public class OrderBase {
     private WebApplicationContext context;
 
     @MockitoBean
-    private OrderQueryService orderQueryService;
+    private ForQueryingOrders orderQueryService;
 
     @MockitoBean
     private BuyNowApplicationService buyNowApplicationService;

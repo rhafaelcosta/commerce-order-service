@@ -1,10 +1,10 @@
 package com.github.rhafaelcosta.commerce.order.contract.base;
 
-import com.github.rhafaelcosta.commerce.order.application.shoppingcart.management.ShoppingCartManagementApplicationService;
-import com.github.rhafaelcosta.commerce.order.application.shoppingcart.management.ShoppingCartOutputTestDataBuilder;
-import com.github.rhafaelcosta.commerce.order.application.shoppingcart.query.ShoppingCartQueryService;
-import com.github.rhafaelcosta.commerce.order.domain.model.shoppingcart.ShoppingCartNotFoundException;
-import com.github.rhafaelcosta.commerce.order.presentation.shoppingcart.ShoppingCartController;
+import com.github.rhafaelcosta.commerce.order.core.application.shoppingcart.ShoppingCartManagementApplicationService;
+import com.github.rhafaelcosta.commerce.order.core.application.shoppingcart.ShoppingCartOutputTestDataBuilder;
+import com.github.rhafaelcosta.commerce.order.core.ports.in.shoppingcart.ForQueryingShoppingCarts;
+import com.github.rhafaelcosta.commerce.order.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
+import com.github.rhafaelcosta.commerce.order.infrastructure.adapters.in.web.shoppingcart.ShoppingCartController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -24,7 +24,7 @@ public class ShoppingCartBase {
     private WebApplicationContext context;
 
     @MockitoBean
-    private ShoppingCartQueryService queryService;
+    private ForQueryingShoppingCarts queryService;
 
     @MockitoBean
     private ShoppingCartManagementApplicationService managementService;
